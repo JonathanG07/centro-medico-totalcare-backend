@@ -30,5 +30,15 @@ router.get('/', async (req, res) => {
     }
 });
 
+// 📊 Contar todas las citas registradas
+router.get('/count', async (req, res) => {
+  try {
+    const total = await Cita.countDocuments();
+    res.json({ total });
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener citas', error });
+  }
+});
+
 //Exporta el enrutador
 module.exports = router;
