@@ -45,23 +45,47 @@ app.get('/', (req, res) => {
 //Configura el puerto
 const PORT = process.env.PORT || 3000;
 
-// --- Crear primer usuario administrador (solo una vez) ---
+// // --- Crear primer usuario administrador (solo una vez) ---
 
+// const bcrypt = require('bcryptjs');
+// const Usuario = require('../models/Usuario');
+
+// router.get('/crear-admin', async (req, res) => {
+//   try {
+//     const existente = await Usuario.findOne({ email: 'admin@totalcare.com' });
+//     if (existente) return res.json({ mensaje: 'El admin ya existe' });
+
+//     const password = await bcrypt.hash('Admin1234', 10);
+//     const nuevoAdmin = await Usuario.create({
+//       nombre: 'Administrador Principal',
+//       email: 'admin@totalcare.com',
+//       password,
+//       rol: 'administrador'
+//     });
+
+    // --- Crear primer usuario administrador (solo una vez) ---
 const bcrypt = require('bcryptjs');
-const Usuario = require('../models/usuario');
+const Usuario = require('./models/Usuario');
 
-router.get('/crear-admin', async (req, res) => {
-  try {
-    const existente = await Usuario.findOne({ email: 'admin@totalcare.com' });
-    if (existente) return res.json({ mensaje: 'El admin ya existe' });
-
-    const password = await bcrypt.hash('Admin1234', 10);
-    const nuevoAdmin = await Usuario.create({
-      nombre: 'Administrador Principal',
-      email: 'admin@totalcare.com',
-      password,
-      rol: 'administrador'
-    });
+(async () => {
+    try {
+        const adminExistente = await Usuario.findOne({ email: 'admin@totalcare.com' });
+        if (!adminExistente) {
+        const hashedPassword = await bcrypt.hash('Admin1234', 10);
+        await Usuario.create({
+            nombre: 'Administrador Principal',
+            email: 'admin@totalcare.com',
+            password: hashedPassword,
+            rol: 'administrador'
+        });
+        console.log('✅ Administrador principal creado exitosamente');
+        } else {
+        console.log('ℹ️ El administrador ya existe');
+        }
+    } catch (error) {
+        console.error('❌ Error al crear el administrador:', error.message);
+    }
+    })();
 
     res.json({ mensaje: 'Administrador creado', admin: nuevoAdmin });
   } catch (error) {
