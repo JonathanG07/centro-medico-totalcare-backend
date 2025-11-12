@@ -48,7 +48,7 @@ const PORT = process.env.PORT || 3000;
 // --- Crear primer usuario administrador (solo una vez) ---
 
 const bcrypt = require('bcryptjs');
-const Usuario = require('../models/Usuario');
+const Usuario = require('../models/usuario');
 
 router.get('/crear-admin', async (req, res) => {
   try {
