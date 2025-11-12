@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const connectDB = async () => {
     try {
         //Conecta usando la URI de .env // process.env.MONGODB_URI
-        await mongoose.connect('mongodb+srv://jonathangpdr_db_user:Djagp07.@cluster0.kqueo4v.mongodb.net/?appName=Cluster0totalcareDB', {
+        await mongoose.connect(process.env.MONGODB_URI, {
             useNewUrlParser: true, //Evita advertencias de depreciacion
             useUnifiedTopology: true //Usa el nuevo motor de topologia
         });
