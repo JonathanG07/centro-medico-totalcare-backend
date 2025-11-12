@@ -1,11 +1,11 @@
-//Imposta dependencias
-const express = require('express'); //Framework para el servidor
-const cors = require('cors'); //Permite solicitudes desde el frontend
-const dotenv = require('dotenv'); //Carga variables de entorno
-const connectDB = require('./config/db'); //Conexcion a MongoDB
+//Importa dependencias
+const express = require('express');
+const cors = require('cors');
+const dotenv = require('dotenv');
+const connectDB = require('./config/db');
 
 //Rutas
-const empleadoRoutes = require('./routes/empleados'); //Rutas de empleados
+const empleadoRoutes = require('./routes/empleados');
 const doctorRoutes = require('./routes/doctores');
 const pacienteRoutes = require('./routes/pacientes');
 const citaRoutes = require('./routes/citas');
@@ -15,7 +15,7 @@ const usuarioRoutes = require('./routes/usuarios');
 //Carga variables de entorno
 dotenv.config();
 
-//Crea la aplicacion Express
+//Crea la aplicación Express
 const app = express();
 
 //Conecta a MongoDB
@@ -23,11 +23,11 @@ connectDB();
 
 //Configura middlewares
 app.use(cors({
-  origin: '*', // permite todas las conexiones (para pruebas)
+  origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
-}));//Habilita CORS
-app.use(express.json()); //Parsea cuerpos JSON
+}));
+app.use(express.json());
 
 //Define rutas
 app.use('/api/empleados', empleadoRoutes);
@@ -37,64 +37,38 @@ app.use('/api/citas', citaRoutes);
 app.use('/api/historial', historialRoutes);
 app.use('/api/usuarios', usuarioRoutes);
 
-//Ruta raiz para verificar el servidor
+//Ruta raíz
 app.get('/', (req, res) => {
-    res.send('API de Gestión de Centro Medico funcionando');
+  res.send('API de Gestión de Centro Médico funcionando');
 });
 
-//Configura el puerto
-const PORT = process.env.PORT || 3000;
-
-// // --- Crear primer usuario administrador (solo una vez) ---
-
-// const bcrypt = require('bcryptjs');
-// const Usuario = require('../models/Usuario');
-
-// router.get('/crear-admin', async (req, res) => {
-//   try {
-//     const existente = await Usuario.findOne({ email: 'admin@totalcare.com' });
-//     if (existente) return res.json({ mensaje: 'El admin ya existe' });
-
-//     const password = await bcrypt.hash('Admin1234', 10);
-//     const nuevoAdmin = await Usuario.create({
-//       nombre: 'Administrador Principal',
-//       email: 'admin@totalcare.com',
-//       password,
-//       rol: 'administrador'
-//     });
-
-    // --- Crear primer usuario administrador (solo una vez) ---
+// --- Crear primer usuario administrador (solo una vez) ---
 const bcrypt = require('bcryptjs');
 const Usuario = require('./models/Usuario');
 
 (async () => {
-    try {
-        const adminExistente = await Usuario.findOne({ email: 'admin@totalcare.com' });
-        if (!adminExistente) {
-        const hashedPassword = await bcrypt.hash('Admin1234', 10);
-        await Usuario.create({
-            nombre: 'Administrador Principal',
-            email: 'admin@totalcare.com',
-            password: hashedPassword,
-            rol: 'administrador'
-        });
-        console.log('✅ Administrador principal creado exitosamente');
-        } else {
-        console.log('ℹ️ El administrador ya existe');
-        }
-    } catch (error) {
-        console.error('❌ Error al crear el administrador:', error.message);
+  try {
+    const adminExistente = await Usuario.findOne({ email: 'admin@totalcare.com' });
+    if (!adminExistente) {
+      const hashedPassword = await bcrypt.hash('Admin1234', 10);
+      await Usuario.create({
+        nombre: 'Administrador Principal',
+        email: 'admin@totalcare.com',
+        password: hashedPassword,
+        rol: 'administrador'
+      });
+      console.log('✅ Administrador principal creado exitosamente');
+    } else {
+      console.log('ℹ️ El administrador ya existe');
     }
-    })();
-
-    res.json({ mensaje: 'Administrador creado', admin: nuevoAdmin });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('❌ Error al crear el administrador:', error.message);
   }
-});
+})();
 
-
+// configuracion del PUERTO
+const PORT = process.env.PORT || 3000;
 //Inicia el servidor
 app.listen(PORT, () => {
-    console.log(`Servidor corriendo en el puerto ${PORT}`);
+  console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
