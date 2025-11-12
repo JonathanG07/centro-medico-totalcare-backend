@@ -88,4 +88,34 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// 📊 Contar todos los usuarios
+router.get('/count', async (req, res) => {
+  try {
+    const total = await Usuario.countDocuments();
+    res.json({ total });
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener usuarios', error });
+  }
+});
+
+// 📊 Contar médicos
+router.get('/count/medicos', async (req, res) => {
+  try {
+    const total = await Usuario.countDocuments({ rol: 'medico' });
+    res.json({ total });
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener médicos', error });
+  }
+});
+
+// 📊 Contar pacientes
+router.get('/count/pacientes', async (req, res) => {
+  try {
+    const total = await Usuario.countDocuments({ rol: 'paciente' });
+    res.json({ total });
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener pacientes', error });
+  }
+});
+
 module.exports = router;
