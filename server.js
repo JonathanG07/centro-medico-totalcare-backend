@@ -22,7 +22,11 @@ const app = express();
 connectDB();
 
 //Configura middlewares
-app.use(cors()); //Habilita CORS
+app.use(cors({
+  origin: '*', // permite todas las conexiones (para pruebas)
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));//Habilita CORS
 app.use(express.json()); //Parsea cuerpos JSON
 
 //Define rutas
