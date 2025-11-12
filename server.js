@@ -49,25 +49,28 @@ const PORT = process.env.PORT || 3000;
 const bcrypt = require('bcryptjs');
 const Usuario = require('./models/Usuario');
 
-(async () => {
-    try {
-        const adminExistente = await Usuario.findOne({ email: 'admin@totalcare.com' });
-        if (!adminExistente) {
-        const hashedPassword = await bcrypt.hash('Admin1234', 10);
-        await Usuario.create({
-            nombre: 'Administrador Principal',
-            email: 'admin@totalcare.com',
-            password: hashedPassword,
-            rol: 'administrador'
-        });
-        console.log('✅ Administrador principal creado exitosamente');
-        } else {
-        console.log('ℹ️ El administrador ya existe');
-        }
-    } catch (error) {
-        console.error('❌ Error al crear el administrador:', error.message);
-    }
-    })();
+const bcrypt = require('bcryptjs');
+const Usuario = require('../models/Usuario');
+
+router.get('/crear-admin', async (req, res) => {
+  try {
+    const existente = await Usuario.findOne({ email: 'admin@totalcare.com' });
+    if (existente) return res.json({ mensaje: 'El admin ya existe' });
+
+    const password = await bcrypt.hash('Admin1234', 10);
+    const nuevoAdmin = await Usuario.create({
+      nombre: 'Administrador Principal',
+      email: 'admin@totalcare.com',
+      password,
+      rol: 'administrador'
+    });
+
+    res.json({ mensaje: 'Administrador creado', admin: nuevoAdmin });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 
 //Inicia el servidor
 app.listen(PORT, () => {
