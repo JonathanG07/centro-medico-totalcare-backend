@@ -4,13 +4,6 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 
-//Rutas
-const empleadoRoutes = require('./routes/empleados');
-const doctorRoutes = require('./routes/doctores');
-const pacienteRoutes = require('./routes/pacientes');
-const citaRoutes = require('./routes/citas');
-const historialRoutes = require('./routes/historial');
-const usuarioRoutes = require('./routes/usuarios');
 
 //Carga variables de entorno
 dotenv.config();
@@ -18,8 +11,6 @@ dotenv.config();
 //Crea la aplicación Express
 const app = express();
 
-//Conecta a MongoDB
-connectDB();
 
 //Configura middlewares
 app.use(cors({
@@ -28,6 +19,18 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
+
+//Conecta a MongoDB
+connectDB();
+
+//Rutas
+const empleadoRoutes = require('./routes/empleados');
+const doctorRoutes = require('./routes/doctores');
+const pacienteRoutes = require('./routes/pacientes');
+const citaRoutes = require('./routes/citas');
+const historialRoutes = require('./routes/historial');
+const usuarioRoutes = require('./routes/usuarios');
+
 
 //Define rutas
 app.use('/api/empleados', empleadoRoutes);
